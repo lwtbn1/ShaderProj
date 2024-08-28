@@ -33,7 +33,12 @@ Shader "Custom/Properties"
             Name "S1_Pass1"
             //
             //Tags{"LightMode"="ForwardBase"}
+            //Blend命令用于颜色混合，SrcAlpha值是片元着色器输出alpha值。使用条件 Queue=Transparent
             Blend SrcAlpha OneMinusSrcAlpha
+            //仅会向RGB通道写入颜色
+            ColorMask RGBA
+
+            Cull Front
             HLSLPROGRAM
             //include必须包含在 HLSLPROGRAM里面
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
