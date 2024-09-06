@@ -4,6 +4,7 @@ Shader "Custom/Properties"
     {
 
         _IntegerVal("MyIntegerVal", Integer) = 10
+        _StencilVal("StencilVal", Integer) = 0
         _FloatVal("MyFloatVal", Float) = 1.3
         _AlphaVal("AlphaVal", Range(0,1)) = 1
         _FloatRangeVal("MyFloatRangeVal", Range(0,10))= 2
@@ -34,11 +35,22 @@ Shader "Custom/Properties"
             //
             //Tags{"LightMode"="ForwardBase"}
             //Blend命令用于颜色混合，SrcAlpha值是片元着色器输出alpha值。使用条件 Queue=Transparent
-            Blend SrcAlpha OneMinusSrcAlpha
+            //Blend SrcAlpha OneMinusSrcAlpha
             //仅会向RGB通道写入颜色
-            ColorMask RGBA
+            //ColorMask RGBA
+            //剔除。
+            //Cull Front
+            //模板测试    如过测试通过则会进行后续的深度测试，如过通不过则GPU会丢弃该片元
+            //模板测试是否通过计算公式：(Ref & ReadMask) Comp (stencilBufferValue & ReadMask)
+            Stencil
+            {
+                Ref [_StencilVal]
+                Comp Greater
+                Pass Replace
+            }
 
-            Cull Front
+
+
             HLSLPROGRAM
             //include必须包含在 HLSLPROGRAM里面
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
